@@ -1,144 +1,165 @@
-// ## 1 - Instructions:
-// - Create a folder named: first_project_js_firstName_lastName
-// - Create a repository with the same name as the folder
-// - Adhere to the folder structure
-// - Individual work
-// - Minimum of 10 commits
-// - Deadline: One day
-// - Use of object classes, arrays, functions, prompts, etc.
 
-// ## 2 - Project Objective:
-// - Create a JavaScript program that simulates logging into a bank account using only the console to interact with the user.
 
-// ## 3 - Instructions:
-// - Account Creation and Management:
-//     + Allow the user, via prompts, to choose between signing up, logging in, or changing the password.
-//     + If the user only writes "exit," they exit the current process, and the choice question is asked again.
-//         * If the user chooses to sign up, here are the details they must enter:
-let user={}
-let Database=[]
-let tes = /[ `!@#$%^&*()_+-=[]{};':"\|,.<>]/
-let SpecialCharacter_name = /[!@#$%^&()-+={}[]:;"'<>,.]/
-let SpecialCharacter_email = /[!#$%^&()-+={}[]:;"'<>,.]/
+let user = []
+let currentUser = null;
+// first promt
+function dataChoose() {
+    while (true) {
+        let action = prompt("Choose: signup / login / change-password / exit").trim().toLowerCase();
 
- while (true){
-let askuser =prompt("choose: signing up,logging in ,changing password ")
-if(askuser=="exit"){
-let askuser =prompt("choose: signing up,logging in ,changing password ")
+        if (action === "signup") {
+            alert("please fill the sign up form.");
+            signup();
 
-}else if(askuser === "signing up"){
-    let prenom=prompt("entre your name") 
-    if (tes.test(prenom)) {
-           console.log("rak ghalt");
-           
+        } else if (action === "login") {
+            alert("Login selected.");
+            login()
+        } else if (action === "change-password") {
+            alert("Change password selected.");
+            changePassword()
+        } else if (action === "exit") {
+            alert("Exiting...");
+            break;
+
+        } else {
+            alert("Invalid option.");
         }
-    prenom.charAt(0).toUpperCase()+prenom.slice(1)
-    
-    if (prenom.length<=5){
-        alert("not save the name")   
-        
-    } 
-    let email=prompt("entre your email").trim()
-email = email.toLowerCase()
-if (email.length >= 10 && SpecialCharacter_name.test(prenom)== false)
+    }
+}
 
-                email = email.toLowerCase() 
-                if (email.length >= 10 && SpecialCharacter_name.test(email)== false) {
-                    email= email
-                    break
-                } else if (/\s/.test(email)) {
-                     email = prompt("enter your email bla space").trim()
-                }else if (email.split('@').length > 2) {
-                   email = prompt("enter your email mafihch  '@' ").trim()
-               }else if (SpecialCharacter_email.test(email)) {
-                 email = prompt("enter your email bla" + SpecialCharacter_email).trim()
-                 }
- 
+dataChoose();
 
-if (email.includes(email)) {
-    alert("This email is already in use. Please use a different email.");
-} 
+function majuscel(fonction) {
+    return fonction.charAt(0).toUpperCase() + fonction.slice(1).toLowerCase();
+}
+// step 2: create coditions to signup
 
-    let age=prompt("entre your age")
-    let Password=prompt("entre your Password")
-    let Password_confirmed=prompt("Password_confirmed")
-    
+function isValidName(name) {
+    name = name.trim();
+    if (name.length < 5 || /[^a-zA-Z\s]/.test(name)) return false;
 
+    let  evry= name.split(" ");
+    return evry.every(part => /^[A-Z][a-z]+$/.test(majuscel(part)));
+}
 
-    user.name=prenom
-    user.email=email
-    user.age=age
-    user.Password=Password
-    user.Password_confirmed=Password_confirmed
-    console.log(Database);
-    Database.push(user)
-    break
-}else if(askuser=="logging in"){
-    let email2=prompt("entre your email")
-    let password2=prompt("entre your password")
+function isValidEmail(email) {
+    email = email.trim().toLowerCase();
+    if (email.includes(" ") || email.length < 10) return false;
+    const atSplit = email.split("@");
+    if (atSplit.length !== 2) return false;
 
-}else if(askuser== "changing password"){
-    let passwotd3=("entre first password")
-    let newpasswotd=("entre new password")
-    let newpasswotd1=("confirmi new password")
+    const exists = db.some(user => user.email === email);
+    return !exists;
+}
 
+function isValidAge(age) {
+    age = age.trim();
+    if (!/^\d+$/.test(age)) return false;
+    if (age.length === 0 || age.length >= 3) return false;
+    return true;
+}
+
+function isValidPassword(password) {
+    password = password.trim();
+    if (password.length < 7 || /\s/.test(password)) return false;
+    if (!/[@#\-\+\*\/]/.test(password)) return false;
+    return true;
+}
+
+function signup() {
+    let name = prompt("Enter your name").trim();
+    if (!isValidName(name)) {
+        alert("Invalid name. Use capital letters, no special characters, and at least 5 characters.");
+        return;
+    }
+    name = name.split(" ").map(capitalize).join(" ");
+
+    let email = prompt("Enter your email address:").trim().toLowerCase();
+    if (!isValidEmail(email)) {
+        alert("Invalid or already used email. Must contain '@', no spaces, and be unique.");
+        return;
+    }
+
+    let age = prompt("Enter your age:").trim();
+    if (!isValidAge(age)) {
+        alert("Invalid age. Must be digits only and between 1-99.");
+        return;
+    }
+
+    let password = prompt("Create a password:").trim();
+    if (!isValidPassword(password)) {
+        alert("Invalid password. Must be at least 7 characters, no spaces, and contain at least one special character (@, #, -, +, *, /).");
+        return;
+    }
+
+    let confirm = prompt("Confirm your password:").trim();
+    if (password !== confirm) {
+        alert("Passwords do not match. Signup blocked.");
+        return;
+    }
+
+    // step3: Save database user
+    db.push({ name, email, age, password });
+    alert("Signup successful!");
 }
 
 
- }
- console.log(Database);
- 
+// step4 : create conditions of log in
+function login() {
+    let email = prompt("Enter your email:").trim().toLowerCase();
+
+    const user = db.find(user => user.email === email);
+    if (!user) {
+        alert("Email not found.");
+        return;
+    }
+
+    let password = prompt("Enter your password:").trim();
+    if (user.password !== password) {
+        alert("Incorrect password.");
+        return;
+    }
+
+    currentUser = user;
+    alert(`Login successful! Welcome, ${user.name}.`);
+}
+// step5 : create conditions changed password
 
 
-    
+function changePassword() {
+    let email = prompt("Enter your registered email:").trim().toLowerCase();
+    const user = db.find(user => user.email === email);
+    if (!user) {
+        alert("Email not found.");
+        return;
+    }
+
+    let oldPassword = prompt("Enter your current password:").trim();
+    if (user.password !== oldPassword) {
+        alert("Incorrect current password.");
+        return;
+    }
+
+    let newPassword = prompt("Enter your new password:").trim();
+    if (!isValidPassword(newPassword)) {
+        alert("Invalid new password. Must be at least 7 characters, no spaces, and include one special character (@, #, -, +, *, /).");
+        return;
+    }
+
+    let confirmPassword = prompt("Confirm your new password:").trim();
+    if (newPassword !== confirmPassword) {
+        alert("Passwords do not match. Password change cancelled.");
+        return;
+    }
+
+    user.password = newPassword;
+    alert("Password successfully changed.");
+}
 
 
 
 
-
-
-
-//             # Name (Full):
-//             - Check for leading or trailing spaces.
-//             - The first letter should be capitalized.
-//             - After each space, the first letter should remain capitalized.
-//             - Check that all other characters are in lowercase.
-//             - Do not save the Name if it has less than 5 characters (excluding spaces).
-//             - Do not save the Name if it contains numbers, "@", or similar special characters.
-
-//             # Email:
-//             - Check for leading or trailing spaces.
-//             - Convert all letters to lowercase.
-//             - Do not save the Email if it has spaces in the middle.
-//             - Do not save the Email if it has fewer than 10 characters (excluding spaces).
-//             - Do not save the Email if it does not contain exactly one "@" symbol.
-//             - Ensure the email is unique.
-
-//             # Age:
-//             - Check for leading, trailing, or middle spaces.
-//             - Verify that only digits are entered.
-//             - Do not save the Age if it has 0 characters, or if it has 3 characters or more.
-
-//             # Password:
-//             - Check for leading or trailing spaces.
-//             - Do not save the Password if it has spaces in the middle.
-//             - Require at least one special character from the set: ["@", "#", "-", "+", "*", "/"].
-//             - Require at least 7 characters to confirm the password.
-
-//             # Password_confirmed:
-//             - The user must re-enter their exact password; otherwise, they are blocked.
-
-//         * If the user chooses to log in, here are the details they must enter:
-//             # Email:
-//             - Check if the email exists in our Database.
-            
-//             # Password:
-//             - Check if the entered password is associated with the previously entered email.
-
-//         * If the user chooses to change the password:
-//             - They must enter their existing Email in the Database.
-
-//         * After the user logs in, display the amount they have in their bank (user's choice) and offer them services:
+// step5 : After the user logs in, display the amount they have in their bank (user's choice) and offer them services:
 //             # Logout:
 //             - If the user chooses this option, they are logged out and offered the option, as at the beginning, to sign up, log in, or change the password.
             
@@ -158,3 +179,5 @@ if (email.includes(email)) {
             
 //             # History:
 //             - Ability to view the entire transaction history.
+
+
