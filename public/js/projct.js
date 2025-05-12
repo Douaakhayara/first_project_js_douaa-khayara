@@ -17,25 +17,60 @@
 //         * If the user chooses to sign up, here are the details they must enter:
 let user={}
 let Database=[]
+let tes = /[ `!@#$%^&*()_+-=[]{};':"\|,.<>]/
+let SpecialCharacter_name = /[!@#$%^&()-+={}[]:;"'<>,.]/
+let SpecialCharacter_email = /[!#$%^&()-+={}[]:;"'<>,.]/
 
  while (true){
 let askuser =prompt("choose: signing up,logging in ,changing password ")
 if(askuser=="exit"){
 let askuser =prompt("choose: signing up,logging in ,changing password ")
 
-}else if(askuser=="signing up"){
-    let prenom=prompt("entre your name")
-    let email=prompt("entre your email")
+}else if(askuser === "signing up"){
+    let prenom=prompt("entre your name") 
+    if (tes.test(prenom)) {
+           console.log("rak ghalt");
+           
+        }
+    prenom.charAt(0).toUpperCase()+prenom.slice(1)
+    
+    if (prenom.length<=5){
+        alert("not save the name")   
+        
+    } 
+    let email=prompt("entre your email").trim()
+email = email.toLowerCase()
+if (email.length >= 10 && SpecialCharacter_name.test(prenom)== false)
+
+                email = email.toLowerCase() 
+                if (email.length >= 10 && SpecialCharacter_name.test(email)== false) {
+                    email= email
+                    break
+                } else if (/\s/.test(email)) {
+                     email = prompt("enter your email bla space").trim()
+                }else if (email.split('@').length > 2) {
+                   email = prompt("enter your email mafihch  '@' ").trim()
+               }else if (SpecialCharacter_email.test(email)) {
+                 email = prompt("enter your email bla" + SpecialCharacter_email).trim()
+                 }
+ 
+
+if (email.includes(email)) {
+    alert("This email is already in use. Please use a different email.");
+} 
+
     let age=prompt("entre your age")
     let Password=prompt("entre your Password")
     let Password_confirmed=prompt("Password_confirmed")
+    
+
+
     user.name=prenom
     user.email=email
     user.age=age
     user.Password=Password
     user.Password_confirmed=Password_confirmed
     console.log(Database);
-    
     Database.push(user)
     break
 }else if(askuser=="logging in"){
@@ -51,7 +86,10 @@ let askuser =prompt("choose: signing up,logging in ,changing password ")
 
 
  }
+ console.log(Database);
  
+
+
     
 
 
