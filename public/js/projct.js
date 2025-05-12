@@ -1,36 +1,35 @@
 
 
-let user = []
+const database= {}
 let currentUser = null;
-// first promt
+
+function capitalize(funct) {
+    return funct.charAt(0).toUpperCase() + funct.slice(1).toLowerCase();
+}
 function dataChoose() {
     while (true) {
-        let action = prompt("Choose: signup / login / change-password / exit").trim().toLowerCase();
-
-        if (action === "signup") {
+        let mode = prompt("Choose: signup / login / change-password / exit").trim().toLowerCase();
+        if (mode === "signup") {
             alert("please fill the sign up form.");
             signup();
 
-        } else if (action === "login") {
+        } else if (mode === "login") {
             alert("Login selected.");
             login()
-        } else if (action === "change-password") {
+        } else if (mode === "change-password") {
             alert("Change password selected.");
             changePassword()
-        } else if (action === "exit") {
+        } else if (mode === "exit") {
             alert("Exiting...");
             break;
 
         } else {
-            alert("Invalid option.");
+            alert("Invalid ");
         }
+        
+        
     }
-}
-
-dataChoose();
-
-function majuscel(fonction) {
-    return fonction.charAt(0).toUpperCase() + fonction.slice(1).toLowerCase();
+    mode.push(database)
 }
 // step 2: create coditions to signup
 
@@ -38,8 +37,8 @@ function isValidName(name) {
     name = name.trim();
     if (name.length < 5 || /[^a-zA-Z\s]/.test(name)) return false;
 
-    let  evry= name.split(" ");
-    return evry.every(part => /^[A-Z][a-z]+$/.test(majuscel(part)));
+    const parts = name.split(" ");
+    return parts.every(part => /^[A-Z][a-z]+$/.test(capitalize(part)));
 }
 
 function isValidEmail(email) {
@@ -48,7 +47,7 @@ function isValidEmail(email) {
     const atSplit = email.split("@");
     if (atSplit.length !== 2) return false;
 
-    const exists = db.some(user => user.email === email);
+    const exists = database.some(database => database.email === email);
     return !exists;
 }
 
@@ -74,7 +73,7 @@ function signup() {
     }
     name = name.split(" ").map(capitalize).join(" ");
 
-    let email = prompt("Enter your email address:").trim().toLowerCase();
+    let email = prompt("Enter your email").trim().toLowerCase();
     if (!isValidEmail(email)) {
         alert("Invalid or already used email. Must contain '@', no spaces, and be unique.");
         return;
@@ -86,7 +85,7 @@ function signup() {
         return;
     }
 
-    let password = prompt("Create a password:").trim();
+    let password = prompt("entre password:").trim();
     if (!isValidPassword(password)) {
         alert("Invalid password. Must be at least 7 characters, no spaces, and contain at least one special character (@, #, -, +, *, /).");
         return;
@@ -99,7 +98,7 @@ function signup() {
     }
 
     // step3: Save database user
-    db.push({ name, email, age, password });
+    database.push({ name, email, age, password });
     alert("Signup successful!");
 }
 
@@ -108,7 +107,7 @@ function signup() {
 function login() {
     let email = prompt("Enter your email:").trim().toLowerCase();
 
-    const user = db.find(user => user.email === email);
+    const user = database.find(user => user.email === email);
     if (!user) {
         alert("Email not found.");
         return;
@@ -128,7 +127,7 @@ function login() {
 
 function changePassword() {
     let email = prompt("Enter your registered email:").trim().toLowerCase();
-    const user = db.find(user => user.email === email);
+    const user = database.find(user => user.email === email);
     if (!user) {
         alert("Email not found.");
         return;
@@ -155,6 +154,8 @@ function changePassword() {
     user.password = newPassword;
     alert("Password successfully changed.");
 }
+console.log(database);
+
 
 
 
